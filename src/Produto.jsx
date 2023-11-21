@@ -1,10 +1,15 @@
 import React from 'react';
+import { GlobalContext } from './GlobalContext';
 
 const Produto = ({ dados }) => {
+  const global = React.useContext(GlobalContext);
+  console.log(global);
+  if (global.dados === null) return null;
   return (
     <div>
-      <h1>{dados.nome}</h1>
-      <p>R$ {dados.preco}</p>
+      Produto:{' '}
+      {global.dados &&
+        global.dados.map((produto) => <li key={produto.id}>{produto.nome}</li>)}
     </div>
   );
 };
