@@ -1,27 +1,37 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Produto from './Produto';
 
 const App = () => {
-  const [dados, setDados] = React.useState(null);
-  const [carregando, setCarregando] = React.useState(null);
+  const [dados, setDados] = useState(null);
+  const [preferencia, setPreferencia] = useState(
+    localStorage.getItem('preferencia') || '',
+  );
 
-  async function handleClick(event) {
-    setCarregando(true);
+  useEffect(() => {
+    if (preferencia) {
+      fetchDados(preferencia);
+    }
+  }, [preferencia]);
+
+  async function fetchDados(preferencia) {
     const response = await fetch(
-      `https://ranekapi.origamid.dev/json/api/produto/${event.target.innerText}`,
+      `https://ranekapi.origamid.dev/json/api/produto/${preferencia}`,
     );
     const json = await response.json();
     setDados(json);
-    setCarregando(false);
+  }
+
+  function handleClick(event) {
+    const novaPreferencia = event.target.innerText;
+    setPreferencia(novaPreferencia);
   }
 
   return (
     <>
+      <h1>Preferência: {preferencia}</h1>
       <button onClick={handleClick}>smartphone</button>
-      <button onClick={handleClick}>tablet</button>
       <button onClick={handleClick}>notebook</button>
-      {carregando && <p>Carregando...</p>}
-      {!carregando && dados && <Produto dados={dados} />}
+      {dados && <Produto dados={dados} />}
     </>
   );
 };
