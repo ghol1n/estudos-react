@@ -1,49 +1,33 @@
-import React from 'react';
-
-// Organize os produtos como mostrado no vídeo
-// Mostre apenas produtos que forem mais caros que R$ 1500
-const produtos = [
-  {
-    id: 1,
-    nome: 'Smartphone',
-    preco: 'R$ 2000',
-    cores: ['#29d8d5', '#252a34', '#fc3766'],
-  },
-  {
-    id: 2,
-    nome: 'Notebook',
-    preco: 'R$ 3000',
-    cores: ['#ffd045', '#d4394b', '#f37c59'],
-  },
-  {
-    id: 3,
-    nome: 'Tablet',
-    preco: 'R$ 1500',
-    cores: ['#365069', '#47c1c8', '#f95786'],
-  },
-];
+import React, { useState } from 'react';
+import Home from './Home';
+import Produtos from './Produtos';
 
 const App = () => {
+  const [path, setPath] = useState(window.location.pathname);
+
+  const handleNavigation = (newPath) => {
+    setPath(newPath);
+    window.history.pushState({}, '', newPath);
+  };
+
   return (
-    <section>
-      <div>
-        {produtos
-          .filter(({ preco }) => preco.replace('R$ ', '') > 1500)
-          .map(({ id, nome, preco, cores }) => (
-            <div key={id}>
-              <h1>{nome}</h1>
-              <p>Preço: {preco}</p>
-              <p>
-                {cores.map((cor) => (
-                  <li key={cor} style={{ backgroundColor: cor }}>
-                    {cor}
-                  </li>
-                ))}
-              </p>
-            </div>
-          ))}{' '}
-      </div>
-    </section>
+    <div>
+      {/* Botões de navegação */}
+      <nav>
+        <ul>
+          <li>
+            <button onClick={() => handleNavigation('/')}>Home</button>
+          </li>
+          <li>
+            <button onClick={() => handleNavigation('/produtos')}>
+              Produtos
+            </button>
+          </li>
+        </ul>
+      </nav>
+
+      {path === '/' ? <Home /> : <Produtos />}
+    </div>
   );
 };
 
